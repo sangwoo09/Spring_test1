@@ -10,7 +10,7 @@
     <span>로그인 유저 : </span><span th:text="${session.sessionUserName}"></span><br>
 
     타이틀 : <input type="text" th:value="${board2.title}"><br>
-    내용 : <textarea rows="5" type="text"  th:value="${board2.content}"></textarea><br>
+    내용 : <textarea rows="5" type="text"  th:text="${board2.content}"></textarea><br>
     <button type="submit">수정</button><button onclick="location.href='/board2/detail'">뒤로가기</button>
 </form>
 </table>

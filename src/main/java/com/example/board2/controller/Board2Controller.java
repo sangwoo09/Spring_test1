@@ -49,6 +49,9 @@ public class Board2Controller {
     @GetMapping("detail/{no}")
     private String detail(@PathVariable Integer no, Model model){
         Board2 board2 = board2Repo.findById(no).orElse(null);
+        assert board2 != null;
+        board2.setCount(board2.getCount() + 1);
+        board2Repo.save(board2);
         model.addAttribute("board2", board2);
         return "board2/detail";
     }
@@ -60,24 +63,29 @@ public class Board2Controller {
         return "redirect:/board2/list";
     }
 
-    @GetMapping("/modify/{no}")
-    private String modify(@PathVariable Integer no){
-        Optional<Board2> board2 = board2Repo.findById(no);
-        if (board2.isPresent()){
-            return "/board2/modify";
+    @GetMapping("modify/{no}")
+    private String moveModify(@PathVariable Integer no, Model model){
+        Board2 board2 = board2Repo.findById(no).orElse(null);
+        if (board2 != null){
+            model.addAttribute("board2", board2);
+            return "board2/modify";
         }else {
             return "redirect:/board2/list";
         }
     }
 
-    @PostMapping("/modify/{no}")
-    private String modify(@PathVariable Integer no, Board2Dto board2Dto){
+    @PostMapping("modify/{no}")
+    private String modify(@PathVariable Integer no, Board2Dto board2Dto, HttpServletRequest req){
 
-        Board2 board2 = new Board2();
-        board2.setNo(board2.getNo());
-        board2.setTitle(board2Dto.getTitle());
-        board2.setContent(board2Dto.getContent());
+        Board2 board2 = Board2.builder()
+                .no(no)
+                .title(board2Dto.getTitle())
+                .content(board2Dto.getContent()).build();
+
+        HttpSession session = req.getSession();;
+        board2.setWriter(session.getAttribute("sessionUserName").toString());
+
         board2Repo.save(board2);
-        return "redirect:/board2/list"+no;
+        return "redirect:/board2/detail"+no;
     }
 }
