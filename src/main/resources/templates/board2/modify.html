@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>상세정보</title>
+</head>
+<body>
+<table border="1">
+<form th:action="@{'/board2/modify/' + ${board2.no}}" method="post">
+    <span>로그인 유저 : </span><span th:text="${session.sessionUserName}"></span><br>
+
+    타이틀 : <input type="text" th:value="${board2.title}"><br>
+    내용 : <textarea rows="5" type="text"  th:value="${board2.content}"></textarea><br>
+    <button type="submit">수정</button><button onclick="location.href='/board2/detail'">뒤로가기</button>
+</form>
+</table>
+</body>
+</html>

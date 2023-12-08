@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>내용 등록</title>
+</head>
+<body>
+<form action="/board2/reg" method="post">
+    타이틀 : <input type="text" name="title"><br>
+    <input type="hidden" name="writer" th:value="${session.sessionUserName}">
+    내용 : <textarea rows="5" name="content"></textarea><br>
+    <button type="submit">게시글 등록</button>
+</form>
+</body>
+</html>

@@ -3,7 +3,6 @@ package com.example.board2.controller;
 import com.example.board2.entity.Member;
 import com.example.board2.dto.MemberDto;
 import com.example.board2.repository.MemberRepository;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,17 +21,24 @@ public class LoginController {
     @PostMapping("/login")
     private String login(String id, String password, Model model, HttpServletRequest request)
     {
-       Member member = (Member) memberRepo.findIdAndPassword(id, password);
+       Member member =  memberRepo.findIdAndPassword(id, password);
 
        if (member != null){
            HttpSession session = request.getSession();
            session.setAttribute("sessionUserName", member.getName());
-           return "main";
+           return "redirect:/board2/list";
        }else{
            model.addAttribute("msg", "아이디 또는 패스워드를 확인해주세요.");
            return "index";
        }
 
+    }
+
+    @GetMapping("/logout")
+    private String logout(HttpServletRequest req){
+        HttpSession session = req.getSession();
+        session.invalidate();
+        return "index";
     }
 
     @GetMapping("/signup")
@@ -44,11 +50,13 @@ public class LoginController {
     private String signup(MemberDto memberDto, Model model){
         if(!memberDto.getPassword1().equals(memberDto.getPassword2())){
             model.addAttribute("msg", "패스워드가 일치하지 않습니다.");
+            return "signup";
         }
 
         Member result= memberRepo.findById(memberDto.getId()).orElse(null);
         if(result != null){
             model.addAttribute("msg", "중복된 아이디 입니다.");
+            return "signup";
         }
 
         Member member = new Member();
